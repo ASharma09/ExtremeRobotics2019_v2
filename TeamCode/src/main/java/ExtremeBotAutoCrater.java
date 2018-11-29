@@ -28,6 +28,7 @@ public class ExtremeBotAutoCrater extends LinearOpMode
     // Measured distance between minerals
     private static double distanceBetweenMineralsInches = 10.0;
 
+    //Temp
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
