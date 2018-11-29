@@ -41,7 +41,6 @@ public class ExtremeBotAutoCrater extends LinearOpMode
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY = "Ab93omn/////AAABmcvezQk0/UkLnEkBq1IL0w1+OCmdHQDGKxuqvC7p82DtEhhKrSomTyP7U+FB8vlbo/YPejwG/FnJ8C4MnxxSO86rGLTG+wEDwmzKrGGeG6ATXhfoA3umFEfShouWib5UWzXHfR7JGZ9S/bqShhThpU8tgegY8DcF4KN05LL8EVxrDwJw8sLQTA/im52LwBthiDpcIbjrRRll0NX7wVHRQ1IgN9ZL13amiVo4GARHDQx8C20FdpDNi87GV0Ulpu2t6HiAccweCx45rgvSraIfCnOFj2LIAXE60Bw9IOqLijF1Y/QaZWSsr+JkWIYlwifkCXZuk3aecGlM9qmZB1VU/VW1IF7hsbUwKQkmd0sLcN6ps";
-
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
