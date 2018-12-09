@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by femukund on 10/22/2017.
  */
 
-public class Robot
+public class RobotMini
 {
     // Hardware map & op mode
     HardwareMap hwMap;
@@ -21,26 +21,14 @@ public class Robot
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: Andy Mark Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/
             (WHEEL_DIAMETER_INCHES * 3.1415);
     private ElapsedTime runtime = new ElapsedTime();
 
     // Robot wheels
-    DcMotor rightFrontMotor;
-    DcMotor leftFrontMotor;
-    DcMotor rightBackMotor;
-    DcMotor leftBackMotor;
+    DcMotor rightBack;
+    DcMotor leftBack;
 
-    // Arm motors & servos
-    DcMotor armRightMotor;
-    DcMotor armLeftMotor;
-    DcMotor armBackMotor;
-    Servo sweepServo;
-    Servo sideServo;
-    Servo stopServo;
-
-    // Lift & Land motor
-    DcMotor liftMotor;
 
     public void init(HardwareMap ProtohwMap, LinearOpMode linearOpMode)
     {
@@ -48,23 +36,8 @@ public class Robot
         opMode = linearOpMode;
 
         // Wheels
-        leftFrontMotor = hwMap.dcMotor.get("leftFrontMotor");
-        leftBackMotor = hwMap.dcMotor.get("leftBackMotor");
-        rightFrontMotor = hwMap.dcMotor.get("rightFrontMotor");
-        rightBackMotor = hwMap.dcMotor.get("rightBackMotor");
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // Arm
-        armRightMotor = hwMap.dcMotor.get("armRightMotor");
-        armLeftMotor = hwMap.dcMotor.get("armLeftMotor");
-        armBackMotor = hwMap.dcMotor.get("armBackMotor");
-        sweepServo = hwMap.servo.get("sweepServo");
-        stopServo = hwMap.servo.get("stopServo");
-        sideServo = hwMap.servo.get("sideServo");
-
-        // Lift
-        //liftMotor = hwMap.dcMotor.get("liftMotor");
+        leftBack = hwMap.dcMotor.get("leftBack");
+        rightBack = hwMap.dcMotor.get("rightBack");
     }
 
     public void WaitMillis (long millis)
@@ -79,7 +52,7 @@ public class Robot
     }
 
     // drive without encoder. drive based on time.
-    public void drive(double leftFront, double rightFront, double leftBack, double rightBack, long millis)
+/*    public void drive(double leftFront, double rightFront, double leftBack, double rightBack, long millis)
     {
         leftFrontMotor.setPower(leftFront);
         rightFrontMotor.setPower(rightFront);
@@ -155,7 +128,7 @@ public class Robot
      *  1) Move gets to the desired position
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
-     */
+
     public void encoderDrive(double speed,
                              double leftFrontInches, double leftBackInches,
                              double rightFrontInches, double rightBackInches,

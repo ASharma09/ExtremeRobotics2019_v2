@@ -68,11 +68,15 @@ public class ExtremeBotAutoSquare extends LinearOpMode
         */
 
         // drive to Cryptobox
-        robot.driveForward(drivePower, 2800);
+        robot.landRobot();
+        robot.driveBackwards(drivePower, 3300);
+        robot.brake(1000);
+        robot.markerDrop();
+        robot.turnRight(0.3, 250);
+        robot.driveForward(0.4, 1800);
+/*        robot.turnLeft(drivePower, 400);
         robot.brake(2000);
-        robot.turnRight(drivePower, 350);
-        robot.brake(2000);
-        robot.driveBackwards(drivePower, 3500);
+        robot.driveForward(drivePower, 3500);*/
         //robot.TankRight(drivePower, 2150);
         //robot.brake(500);
 

@@ -27,6 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -50,11 +51,12 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-//@Disabled
 public class TensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
+    Robot robot = new Robot();
 
     /*s
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -68,7 +70,7 @@ public class TensorFlowObjectDetection extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY = "Ab93omn/////AAABmcvezQk0/UkLnEkBq1IL0w1+OCmdHQDGKxuqvC7p82DtEhhKrSomTyP7U+FB8vlbo/YPejwG/FnJ8C4MnxxSO86rGLTG+wEDwmzKrGGeG6ATXhfoA3umFEfShouWib5UWzXHfR7JGZ9S/bqShhThpU8tgegY8DcF4KN05LL8EVxrDwJw8sLQTA/im52LwBthiDpcIbjrRRll0NX7wVHRQ1IgN9ZL13amiVo4GARHDQx8C20FdpDNi87GV0Ulpu2t6HiAccweCx45rgvSraIfCnOFj2LIAXE60Bw9IOqLijF1Y/QaZWSsr+JkWIYlwifkCXZuk3aecGlM9qmZB1VU/VW1IF7hsbUwKQkmd0sLcN6ps";
+    private static final String VUFORIA_KEY = "ARhq6bH/////AAABmR5Po117i0O8vVDqK+NCPDlhGlCpx3XXYUDKqp0EfqEu/Zk/tEjTPsX1q6GAHIN9PTovW4vOCb5fn+C48LSqi1DmiuaNao+wWDo5Ks6ayg5khZSHuTghCfKd7bisdiMLMhGkzUe8mf8wljCwKZcL90RIBIlSlyGFwLr9OMcmT3iEo/lGBOlPtDeMUuFFmGEtr38qqDtXZ2XbIgnXcMJ9IkMTEowUssTd/9Ad7dOZf36LxMD8VNfMSOddjuFYchqGXFFpIo+TKiNMoY9a25oFRYOsnngpytHOgrj3l3jB5AFqo1WrvV9vV7bP/KvTfX03QayE+lntlCqzuIO+ZZZSqmNMH6Ae8XwGEPTRyqB9gqfw";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -84,12 +86,24 @@ public class TensorFlowObjectDetection extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot.init(hardwareMap, this);
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        telemetry.addData("Say", "All systems are go!");
+        telemetry.update();
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
+        telemetry.update();
+
+        telemetry.addData("Vuforia Initiated", "All systems are go!");
+        telemetry.update();
+        robot.WaitMillis(10000);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
+            telemetry.update();
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
@@ -142,6 +156,7 @@ public class TensorFlowObjectDetection extends LinearOpMode {
         }
 
         if (tfod != null) {
+            tfod.deactivate();
             tfod.shutdown();
         }
     }
@@ -159,7 +174,11 @@ public class TensorFlowObjectDetection extends LinearOpMode {
         parameters.cameraDirection = CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
+        telemetry.addData("Status", "Vuforia before initialization");
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        telemetry.addData("Status", "Vuforia after initialization");
+        telemetry.addData("Vuforia id", vuforia.toString());
+        robot.WaitMillis(10000);
 
         // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
     }
@@ -170,8 +189,23 @@ public class TensorFlowObjectDetection extends LinearOpMode {
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        telemetry.addData("Tfod Id", new Integer(tfodMonitorViewId).toString());
+        telemetry.update();
+        robot.WaitMillis(10000);
+//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
+        telemetry.addData("Status", "Got tfod Parameters!");
+        telemetry.addData("tfod Parameters", tfodParameters.toString());
+        telemetry.update();
+        robot.WaitMillis(10000);
+        tfodParameters.toString();
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        telemetry.addData("Status", "Got the tfod object!");
+        telemetry.update();
+        robot.WaitMillis(10000);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        telemetry.addData("Status", "Loaded the mineral info into tfod");
+        telemetry.update();
+        robot.WaitMillis(10000);
     }
 }

@@ -26,7 +26,7 @@ public class ExtremeBotAutoCrater extends LinearOpMode
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
 
     // Measured distance between minerals
-    private static double distanceBetweenMineralsInches = 10.0;
+    private static double distanceBetweenMineralsInches = 18.0;
 
     //Temp
     /*
@@ -63,14 +63,14 @@ public class ExtremeBotAutoCrater extends LinearOpMode
 
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
-        initVuforia();
+/*        initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
-
+*/
         // Wait for the game to begin
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
@@ -79,7 +79,7 @@ public class ExtremeBotAutoCrater extends LinearOpMode
         double drivePower = 0.2;
 
         // drive with encoder
-        autonomousDriveWithEncoder(drivePower);
+        autonomousDriveWithoutEncoder(drivePower);
 
         // drive without encoder
         //autonomousDriveWithoutEncoder(drivePower);
@@ -88,13 +88,15 @@ public class ExtremeBotAutoCrater extends LinearOpMode
         telemetry.update();
     }
 
+
+
     /**
      * Drive with encoder
      * @param drivePower Drive power
      */
     private void autonomousDriveWithEncoder(double drivePower)
     {
-        int goldMineralPostion = detectGoldMineralPosition();
+/*        int goldMineralPostion = 0; //detectGoldMineralPosition();
 
         if (goldMineralPostion == -1)
         {
@@ -103,8 +105,8 @@ public class ExtremeBotAutoCrater extends LinearOpMode
         else if (goldMineralPostion == 1)
         {
             robot.encoderDriveRight(drivePower, distanceBetweenMineralsInches, 2000);
-        }
-        robot.encoderDriveForward(drivePower, 100, 5);
+        }*/
+        robot.encoderDriveBackward(drivePower, 20, 1000);
     }
 
     /**
@@ -113,7 +115,7 @@ public class ExtremeBotAutoCrater extends LinearOpMode
      */
     private void autonomousDriveWithoutEncoder(double drivePower)
     {
-        int goldMineralPostion = detectGoldMineralPosition();
+        /*int goldMineralPostion = detectGoldMineralPosition();
         if (goldMineralPostion == -1)
         {
             robot.driveLeft(drivePower,2000);
@@ -121,21 +123,9 @@ public class ExtremeBotAutoCrater extends LinearOpMode
         else if (goldMineralPostion == 1)
         {
             robot.driveRight(drivePower, 2000);
-        }
-
-        robot.driveBackwards(drivePower, 2300);
-        robot.brake(2000);
-        robot.driveBackwards(drivePower, 900);
-        robot.brake(2000);
-        robot.turnLeft(drivePower, 1900);
-        robot.brake(2000);
-        robot.driveForward(0.3, 1500);
-        robot.brake(2000);
-        robot.turnLeft(drivePower,1850);
-        robot.brake(2000);
-        robot.driveForward(drivePower,2000);
-        robot.brake(2000);
-        robot.driveBackwards(0.3, 3650);
+        }*/
+        robot.landRobot();
+        robot.driveBackwards(drivePower, 2200);
     }
 
     /**
