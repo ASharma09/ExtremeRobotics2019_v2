@@ -167,24 +167,28 @@ public class Robot
                              double rightFrontInches, double rightBackInches,
                              double timeoutS)
     {
-        int newLeftFrontTarget;
-        int newLeftBackTarget;
-        int newRightFrontTarget;
-        int newRightBackTarget;
+//        int newLeftFrontTarget;
+  //      int newLeftBackTarget;
+    //    int newRightFrontTarget;
+      //  int newRightBackTarget;
 
         // Ensure that the opmode is still active
         if (opMode.opModeIsActive())
         {
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = leftFrontMotor.getCurrentPosition() + (int) (leftFrontInches * COUNTS_PER_INCH);
-            newLeftBackTarget = leftBackMotor.getCurrentPosition() + (int) (leftBackInches * COUNTS_PER_INCH);
-            newRightFrontTarget = rightFrontMotor.getCurrentPosition() + (int) (rightFrontInches * COUNTS_PER_INCH);
-            newRightBackTarget = rightBackMotor.getCurrentPosition() + (int) (rightBackInches * COUNTS_PER_INCH);
-            leftFrontMotor.setTargetPosition(newLeftFrontTarget);
-            leftBackMotor.setTargetPosition(newLeftBackTarget);
-            rightFrontMotor.setTargetPosition(newRightFrontTarget);
-            rightBackMotor.setTargetPosition(newRightBackTarget);
+            leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            newLeftFrontTarget = leftFrontMotor.getCurrentPosition() + (int) (leftFrontInches * COUNTS_PER_INCH);
+//            newLeftBackTarget = leftBackMotor.getCurrentPosition() + (int) (leftBackInches * COUNTS_PER_INCH);
+//            newRightFrontTarget = rightFrontMotor.getCurrentPosition() + (int) (rightFrontInches * COUNTS_PER_INCH);
+//            newRightBackTarget = rightBackMotor.getCurrentPosition() + (int) (rightBackInches * COUNTS_PER_INCH);
+            leftFrontMotor.setTargetPosition((int) (leftFrontInches * COUNTS_PER_INCH));
+            leftBackMotor.setTargetPosition((int) (leftBackInches * COUNTS_PER_INCH));
+            rightFrontMotor.setTargetPosition((int) (rightFrontInches * COUNTS_PER_INCH));
+            rightBackMotor.setTargetPosition((int) (rightBackInches * COUNTS_PER_INCH));
 
             // Turn On RUN_TO_POSITION
             leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -194,10 +198,10 @@ public class Robot
 
             // reset the timeout time and start motion.
             runtime.reset();
-            leftFrontMotor.setPower(Math.abs(speed));
-            leftBackMotor.setPower(Math.abs(speed));
-            rightFrontMotor.setPower(Math.abs(speed));
-            rightBackMotor.setPower(Math.abs(speed));
+            leftFrontMotor.setPower(speed * Math.signum(leftFrontInches));
+            leftBackMotor.setPower(speed * Math.signum(leftBackInches));
+            rightFrontMotor.setPower(speed * Math.signum(rightFrontInches));
+            rightBackMotor.setPower(speed * Math.signum(rightBackInches));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -211,7 +215,7 @@ public class Robot
             {
 
                 // Display it for the driver.
-                opMode.telemetry.addData("Path1", "Running to %7d :%7d :%7d :7%", newLeftFrontTarget, newLeftBackTarget, newRightFrontTarget, newRightBackTarget);
+//                opMode.telemetry.addData("Path1", "Running to %7d :%7d :%7d :7%", newLeftFrontTarget, newLeftBackTarget, newRightFrontTarget, newRightBackTarget);
                 opMode.telemetry.addData("Path2", "Running at %7d :%7d :7% :7%",
                         leftFrontMotor.getCurrentPosition(),
                         leftBackMotor.getCurrentPosition(),
