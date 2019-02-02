@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.util.Range;
  * Created by femukund on 10/29/2017.
  */
 @TeleOp
-public class ExtremeBotDriveMini extends LinearOpMode {
+public class ExtremeBotDriveMini extends LinearOpMode
+{
     RobotMini robot = new RobotMini();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
         telemetry.addData("Status", "Initialized");
         robot.init(hardwareMap, this);
         telemetry.update();
@@ -23,7 +25,8 @@ public class ExtremeBotDriveMini extends LinearOpMode {
         waitForStart();
 
         // run until driver presses STOP
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
             drive();
         }
     }
@@ -35,24 +38,30 @@ public class ExtremeBotDriveMini extends LinearOpMode {
     }
 
     // drive with joysticks
-    public void driveMiniBot() { {
+    public void driveMiniBot()
+    {
+        {
         double speedRB = 0;
         double speedLB = 0;
         speedRB = Range.clip(speedRB, -1, 1);
         speedLB = Range.clip(speedLB, -1, 1);
-        if (gamepad1.dpad_left) {
+        if (gamepad1.dpad_left)
+        {
             speedRB = 0.7;
             speedLB = 0.7;
         }
-        if (gamepad1.dpad_right) {
+        if (gamepad1.dpad_right)
+        {
             speedRB = -0.7;
             speedLB = -0.7;
         }
-        if (gamepad1.dpad_down) {
+        if (gamepad1.dpad_down)
+        {
             speedRB = 0.7;
             speedLB = -0.7;
         }
-        if (gamepad1.dpad_up) {
+        if (gamepad1.dpad_up)
+        {
             speedRB = -0.7;
             speedLB = 0.7;
         }
@@ -61,7 +70,7 @@ public class ExtremeBotDriveMini extends LinearOpMode {
         telemetry.addData("speedRightBack", speedRB);
         telemetry.addData("speedLeftBack", speedLB);
         telemetry.update();
-    }
+        }
 
 
         /*
@@ -195,7 +204,7 @@ public class ExtremeBotDriveMini extends LinearOpMode {
 
 
 
-    }/*
+}/*
     public void stopLift() {
 
         if (gamepad1.dpad_right) {

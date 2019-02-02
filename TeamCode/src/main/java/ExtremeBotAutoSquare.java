@@ -1,5 +1,8 @@
 //package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -15,78 +18,82 @@ public class ExtremeBotAutoSquare extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        double drivePower = 0.2;
+        double drivePower = 0.35;
 
         robot.init(hardwareMap, this);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        telemetry.addData("Say", "All systems are go!");
+        // Detector
+        SamplingOrderDetector detector = new SamplingOrderDetector();
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0, false);
+        detector.useDefaults(); // Set detector to use default settings
+        detector.downscale = 0.4;
+        // Optional tuning
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.001;
+        detector.ratioScorer.weight = 15;
+        detector.ratioScorer.perfectRatio = 1.0;
+        detector.enable();
+
+        telemetry.addData("Say", "All systems go!");
         //GO!!!
 
-        // Hold glyph
-        //robot.openClaw();
-        //robot.jewelServo.setPosition(0.85);
-
         waitForStart();
-        //robot.holdGlyph();
-        //robot.raiseLift();
 
-        // Lower jewel servo
-
-        //robot.lowerJewelServo();
-        //telemetry.addData("Say", "Servo is lowered.");
-        //telemetry.update();
-
-        // Sense the color of the jewel
-       //boolean isJewelRed = robot.isJewelRed();
-        //telemetry.addData("Is Jewel Red:", isJewelRed);
-
-        // Knock off jewel
-        long driveForwardTime = 2000;
-        long driveBackwardTime = 2000;
-        long driveLeftTime = 2000;
-        long driveRightTime = 2000;
-        /*if (isJewelRed)
+        robot.WaitMillis(3300);
+        SamplingOrderDetector.GoldLocation goldLoc = detector.getLastOrder();
+        telemetry.addData("Current Order" , goldLoc); // The current result for the frame
+        //telemetry.addData("Last Order" , detector.getLastOrder().toString()); // The last known result
+        robot.WaitMillis(300);
+        if (goldLoc == SamplingOrderDetector.GoldLocation.CENTER || goldLoc == SamplingOrderDetector.GoldLocation.UNKNOWN)
         {
-            robot.driveForward(drivePower, 200);
-            robot.brake(500);
-            driveForwardTime2 = 1050;
+            telemetry.addData("Current Program: Center", goldLoc);
+            telemetry.update();
+            robot.landRobot();
+            robot.turnRight(drivePower, 2100);
+            robot.driveBackwards(drivePower, 2130);
+            robot.brake(200);
+            robot.turnLeft(drivePower, 630);
+            robot.brake(200);
+            robot.markerDrop();
+            robot.brake(100);
+            robot.driveBackwards(drivePower, 300);
         }
-        else
+        else if (goldLoc == SamplingOrderDetector.GoldLocation.LEFT)
         {
+            telemetry.addData("Current Program: Left", goldLoc);
+            telemetry.update();
+            robot.landRobot();
+            robot.driveForward(drivePower, 300);
+            robot.turnRight(drivePower, 1550);
+            robot.driveBackwards(0.4, 1650);
+            robot.driveForward(drivePower, 230);
+            robot.turnRight(drivePower, 980);
+            robot.brake(200);
+            robot.driveBackwards(drivePower, 700);
+            robot.brake(200);
+            robot.markerDrop();
+            robot.brake(200);
             robot.driveBackwards(drivePower, 200);
-            robot.brake(500);
-            driveForwardTime2 = 1250;
         }
-
-        // Raise jewel servo
-//        robot.WaitMillis(3000);
-        robot.raiseJewelServo();
-        telemetry.addData("Say", "Servo is raised.");
-        telemetry.update();
-        */
-
-        // drive to Cryptobox
-        robot.landRobot();
-        robot.driveBackwards(drivePower, 3300);
-        robot.brake(1000);
-        robot.markerDrop();
-        robot.turnRight(0.3, 250);
-        robot.driveForward(0.4, 1800);
-/*        robot.turnLeft(drivePower, 400);
-        robot.brake(2000);
-        robot.driveForward(drivePower, 3500);*/
-        //robot.TankRight(drivePower, 2150);
-        //robot.brake(500);
-
-        // Place the glyph
-        //robot.lowerLift();
-        //robot.openClaw();
-        //robot.driveForward(drivePower, 600);
-        //robot.driveBackwards(drivePower, 300);
-        // Park in the triangle
-
+        else if (goldLoc == SamplingOrderDetector.GoldLocation.RIGHT)
+        {
+            telemetry.addData("Current Program: Right", goldLoc);
+            telemetry.update();
+            robot.landRobot();
+            robot.driveForward(drivePower, 300);
+            robot.turnLeft(drivePower, 1420);
+            robot.driveBackwards(0.4, 1730);
+            robot.driveForward(drivePower, 230);
+            robot.turnLeft(drivePower, 780);
+            robot.brake(200);
+            robot.markerDrop();
+            robot.brake(200);
+            robot.driveBackwards(drivePower, 200);
+        }
+        detector.disable();
         telemetry.addData("Say", "I am done.");
         telemetry.update();
     }

@@ -2,6 +2,7 @@
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,31 +17,34 @@ public class Robot
     // Hardware map & op mode
     HardwareMap hwMap;
     LinearOpMode opMode;
+    double drivePower = 0.2;
 
     // Variables for Encoder driving
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: Andy Mark Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: Andy Mark Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Robot wheels
+    //Robot wheels
     DcMotor rightFrontMotor;
     DcMotor leftFrontMotor;
     DcMotor rightBackMotor;
     DcMotor leftBackMotor;
 
     // Arm motors & servos
-    DcMotor armRightMotor;
-    DcMotor armLeftMotor;
-    DcMotor armBackMotor;
-    Servo sweepServo;
+    DcMotor actuatorMotor;
+    DcMotor omniMotor;
+    DcMotor cascadingMotor;
+    DcMotor bootMotor;
     Servo sideServo;
-    Servo stopServo;
+    Servo sweepServo;
+    Servo lockBackServo;
+    Servo lockFrontServo;
 
     // Lift & Land motor
-    DcMotor liftMotor;
+
 
     public void init(HardwareMap ProtohwMap, LinearOpMode linearOpMode)
     {
@@ -56,23 +60,25 @@ public class Robot
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Arm
-        armRightMotor = hwMap.dcMotor.get("armRightMotor");
-        armLeftMotor = hwMap.dcMotor.get("armLeftMotor");
-        armBackMotor = hwMap.dcMotor.get("armBackMotor");
-        sweepServo = hwMap.servo.get("sweepServo");
-        stopServo = hwMap.servo.get("stopServo");
+        actuatorMotor = hwMap.dcMotor.get("actuatorMotor");
+        omniMotor = hwMap.dcMotor.get("omniMotor");
+        cascadingMotor = hwMap.dcMotor.get("cascadingMotor");
+        bootMotor = hwMap.dcMotor.get("bootMotor");
         sideServo = hwMap.servo.get("sideServo");
+        sweepServo = hwMap.servo.get("sweepServo");
+        lockBackServo = hwMap.servo.get("lockBackServo");
+        lockFrontServo = hwMap.servo.get("lockFrontServo");
 
         // Lift
         //liftMotor = hwMap.dcMotor.get("liftMotor");
     }
 
-    public void WaitMillis (long millis)
+    public void WaitMillis(long millis)
     {
-        try{
+        try
+        {
             Thread.sleep(millis);
-        }
-        catch (InterruptedException ex)
+        } catch (InterruptedException ex)
         {
             Thread.currentThread().interrupt();
         }
@@ -91,16 +97,6 @@ public class Robot
     // Drive forward without encoder. drive based on time.
     public void driveForward(double power, long millis)
     {
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-        leftBackMotor.setPower(power);
-        rightBackMotor.setPower(power);
-        WaitMillis(millis);
-    }
-
-    // Drive backward without encoder. drive based on time.
-    public void driveBackwards(double power, long millis)
-    {
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(-power);
         leftBackMotor.setPower(-power);
@@ -108,13 +104,23 @@ public class Robot
         WaitMillis(millis);
     }
 
+    // Drive backward without encoder. drive based on time.
+    public void driveBackwards(double power, long millis)
+    {
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(power);
+        leftBackMotor.setPower(power);
+        rightBackMotor.setPower(power);
+        WaitMillis(millis);
+    }
+
     // Crab left without encoder. drive based on time.
     public void driveLeft(double power, long millis)
     {
-        leftFrontMotor.setPower(-power);
-        leftBackMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-        rightBackMotor.setPower(-power);
+        leftFrontMotor.setPower(power);
+        leftBackMotor.setPower(-power);
+        rightFrontMotor.setPower(-power);
+        rightBackMotor.setPower(power);
         WaitMillis(millis);
     }
 
@@ -131,20 +137,20 @@ public class Robot
     // Tank Turn right without encoder. drive based on time.
     public void turnRight(double power, long millis)
     {
-        leftFrontMotor.setPower(power);
-        leftBackMotor.setPower(power);
-        rightFrontMotor.setPower(-power);
-        rightBackMotor.setPower(-power);
+        leftFrontMotor.setPower(-power);
+        leftBackMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        rightBackMotor.setPower(power);
         WaitMillis(millis);
     }
 
     // Tank Turn left without encoder. drive based on time.
     public void turnLeft(double power, long millis)
     {
-        leftFrontMotor.setPower(-power);
-        leftBackMotor.setPower(-power);
-        rightFrontMotor.setPower(power);
-        rightBackMotor.setPower(power);
+        leftFrontMotor.setPower(power);
+        leftBackMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        rightBackMotor.setPower(-power);
         WaitMillis(millis);
     }
 
@@ -159,20 +165,22 @@ public class Robot
     public void encoderDrive(double speed,
                              double leftFrontInches, double leftBackInches,
                              double rightFrontInches, double rightBackInches,
-                             double timeoutS) {
+                             double timeoutS)
+    {
         int newLeftFrontTarget;
         int newLeftBackTarget;
         int newRightFrontTarget;
         int newRightBackTarget;
 
         // Ensure that the opmode is still active
-        if (opMode.opModeIsActive()) {
+        if (opMode.opModeIsActive())
+        {
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = leftFrontMotor.getCurrentPosition() + (int)(leftFrontInches * COUNTS_PER_INCH);
-            newLeftBackTarget = leftBackMotor.getCurrentPosition() + (int)(leftBackInches * COUNTS_PER_INCH);
-            newRightFrontTarget = rightFrontMotor.getCurrentPosition() + (int)(rightFrontInches * COUNTS_PER_INCH);
-            newRightBackTarget = rightBackMotor.getCurrentPosition() + (int)(rightBackInches * COUNTS_PER_INCH);
+            newLeftFrontTarget = leftFrontMotor.getCurrentPosition() + (int) (leftFrontInches * COUNTS_PER_INCH);
+            newLeftBackTarget = leftBackMotor.getCurrentPosition() + (int) (leftBackInches * COUNTS_PER_INCH);
+            newRightFrontTarget = rightFrontMotor.getCurrentPosition() + (int) (rightFrontInches * COUNTS_PER_INCH);
+            newRightBackTarget = rightBackMotor.getCurrentPosition() + (int) (rightBackInches * COUNTS_PER_INCH);
             leftFrontMotor.setTargetPosition(newLeftFrontTarget);
             leftBackMotor.setTargetPosition(newLeftBackTarget);
             rightFrontMotor.setTargetPosition(newRightFrontTarget);
@@ -199,11 +207,12 @@ public class Robot
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opMode.opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (leftFrontMotor.isBusy() && leftBackMotor.isBusy() && rightFrontMotor.isBusy() && rightBackMotor.isBusy())) {
+                    (leftFrontMotor.isBusy() && leftBackMotor.isBusy() && rightFrontMotor.isBusy() && rightBackMotor.isBusy()))
+            {
 
                 // Display it for the driver.
-                opMode.telemetry.addData("Path1",  "Running to %7d :%7d :%7d :7%", newLeftFrontTarget, newLeftBackTarget, newRightFrontTarget, newRightBackTarget);
-                opMode.telemetry.addData("Path2",  "Running at %7d :%7d :7% :7%",
+                opMode.telemetry.addData("Path1", "Running to %7d :%7d :%7d :7%", newLeftFrontTarget, newLeftBackTarget, newRightFrontTarget, newRightBackTarget);
+                opMode.telemetry.addData("Path2", "Running at %7d :%7d :7% :7%",
                         leftFrontMotor.getCurrentPosition(),
                         leftBackMotor.getCurrentPosition(),
                         rightFrontMotor.getCurrentPosition(),
@@ -273,42 +282,44 @@ public class Robot
     }
 
     // Lift robot
-    public void liftRobot()
+/*    public void liftRobot()
     {
         liftMotor.setPower(-0.2);
         WaitMillis(2000);
         liftMotor.setPower(0);
-    }
+    }*/
 
     public void landRobot()
     {
-        stopServo.setPosition(1);
-        WaitMillis(700);
-        armBackMotor.setPower(0.2);
-        WaitMillis(200);
-        armRightMotor.setPower(0.2);
-        armLeftMotor.setPower(-0.2);
-        WaitMillis(2300);
-        armRightMotor.setPower(0);
-        armLeftMotor.setPower(0);
-        turnRight(0.4, 300);
-        WaitMillis(200);
-        driveBackwards(0.4, 100);
-        WaitMillis(200);
-        turnLeft(0.4, 630);
+        actuatorMotor.setPower(0.75);
+        WaitMillis(7670);
+        actuatorMotor.setPower(0);
+        driveBackwards(drivePower, 400);
+        brake(300);
+        turnRight(drivePower, 600);
+        brake(300);
+        driveForward(drivePower, 400);
+        brake(300);
+        turnRight(drivePower, 1050);
+        brake(300);
     }
 
     public void markerDrop()
     {
-        sideServo.setPosition(1);
+        sideServo.setPosition(0.25);
         opMode.telemetry.addData("First Position", sideServo.getPosition());
         opMode.telemetry.update();
-        WaitMillis(2000);
-        sideServo.setPosition(0);
+        WaitMillis(800);
+        sideServo.setPosition(0.92);
         opMode.telemetry.addData("Second Position", sideServo.getPosition());
         opMode.telemetry.update();
-        WaitMillis(2000);
+        WaitMillis(1000);
+        sideServo.setPosition(0.3);
+        opMode.telemetry.addData("Third Position", sideServo.getPosition());
+        opMode.telemetry.update();
+        WaitMillis(800);
     }
+
     // Rotate arm
 /*    public void rotateArm(long waitTime, double power)
     {
@@ -316,6 +327,7 @@ public class Robot
         WaitMillis(waitTime);
         armMotor.setPower(-power);
         armMotor.setPower(0);
-    }*/
+    }
+*/
 
 }

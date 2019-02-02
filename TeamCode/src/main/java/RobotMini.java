@@ -42,7 +42,8 @@ public class RobotMini
 
     public void WaitMillis (long millis)
     {
-        try{
+        try
+        {
             Thread.sleep(millis);
         }
         catch (InterruptedException ex)
