@@ -147,10 +147,10 @@ public class Robot
     // Tank Turn left without encoder. drive based on time.
     public void turnLeft(double power, long millis)
     {
-        leftFrontMotor.setPower(power);
-        leftBackMotor.setPower(power);
-        rightFrontMotor.setPower(-power);
-        rightBackMotor.setPower(-power);
+        leftFrontMotor.setPower(-power);
+        leftBackMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        rightBackMotor.setPower(power);
         WaitMillis(millis);
     }
 
@@ -242,32 +242,40 @@ public class Robot
 
     // drive forward with encoder. drive by distance.
 
-    public  int convert(double inches)
+    public  int convertInches(double inches)
     {
         return (int) (COUNTS_PER_INCH * inches);
     }
+    public int convertDegrees(double degrees) { return (int) (degrees* 17.54385963157895); }
+
     public void encoderTurnRight(double power, int ticks) {
-        while(opMode.opModeIsActive() && leftFrontMotor.getCurrentPosition() >= ticks) {
-            leftFrontMotor.setPower(power);
-            rightFrontMotor.setPower(-power);
-            leftBackMotor.setPower(power);
-            rightBackMotor.setPower(-power);
-            opMode.telemetry.addData("current leftFrontMotor encoder position: ", leftFrontMotor.getCurrentPosition());
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        leftBackMotor.setPower(power);
+        rightBackMotor.setPower(-power);
+        while (opMode.opModeIsActive() && rightBackMotor.getCurrentPosition() >= -ticks) {
+            opMode.telemetry.addData("current rightBackMotor encoder position: ", rightBackMotor.getCurrentPosition());
             opMode.telemetry.update();
         }
-        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
     }
 
     public void encoderTurnLeft(double power, int ticks) {
-        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFrontMotor.setPower(0);
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
-        leftBackMotor.setPower(0);
+        leftBackMotor.setPower(-power);
         rightBackMotor.setPower(power);
-        while(opMode.opModeIsActive() && leftFrontMotor.getCurrentPosition() <= ticks)
+        while(opMode.opModeIsActive() && rightBackMotor.getCurrentPosition() <= ticks)
         {
-            opMode.telemetry.addData("current leftFrontMotor encoder position: ", leftFrontMotor.getCurrentPosition());
+            opMode.telemetry.addData("current rightBackMotor encoder position: ", rightBackMotor.getCurrentPosition());
             opMode.telemetry.update();
         }
 
