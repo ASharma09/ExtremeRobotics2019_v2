@@ -289,7 +289,7 @@ public class Robot
 
     public void encoderDriveForward(double power, int ticks) {
         leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(power);
         leftBackMotor.setPower(power);
@@ -349,14 +349,16 @@ public class Robot
         actuatorMotor.setPower(0.75);
         WaitMillis(7670);
         actuatorMotor.setPower(0);
-        driveBackwards(drivePower, 400);
+        encoderDriveBackward(drivePower, convertInches(2) );
         brake(300);
-        turnRight(drivePower, 600);
+        encoderTurnRight(drivePower,convertDegrees(45) );
         brake(300);
-        driveForward(drivePower, 400);
+        encoderDriveForward(drivePower, convertInches(2));
         brake(300);
-        turnRight(drivePower, 1050);
+        encoderTurnLeft(drivePower, convertDegrees(45));
         brake(300);
+
+
     }
 
     public void markerDrop()

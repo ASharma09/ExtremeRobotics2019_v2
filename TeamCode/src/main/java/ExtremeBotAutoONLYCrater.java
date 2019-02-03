@@ -47,36 +47,32 @@ public class ExtremeBotAutoONLYCrater extends LinearOpMode
         telemetry.addData("Current Order" , goldLoc); // The current result for the frame
 //        telemetry.addData("Last Order" , detector.getLastOrder().toString()); // The last known result
         robot.WaitMillis(300);
-        if (goldLoc == SamplingOrderDetector.GoldLocation.CENTER || goldLoc == SamplingOrderDetector.GoldLocation.UNKNOWN)
-        {
-            telemetry.addData("Current Program: Center", goldLoc);
-            telemetry.update();
-            robot.landRobot();
-            robot.driveForward(drivePower, 150);
-            robot.turnRight(drivePower, 2000);
-            robot.driveBackwards(drivePower, 2000);
-        }
-        else if (goldLoc == SamplingOrderDetector.GoldLocation.LEFT)
-        {
-            telemetry.addData("Current Program: Left", goldLoc);
-            telemetry.update();
-            robot.landRobot();
-            robot.turnLeft(drivePower, 200);
-            robot.turnLeft(drivePower, 1900);
-            robot.driveBackwards(drivePower, 1000);
-            robot.turnRight(drivePower, 200);
-            robot.driveBackwards(drivePower, 500);
-        }
-        else if (goldLoc == SamplingOrderDetector.GoldLocation.RIGHT)
-        {
-            telemetry.addData("Current Program: Right", goldLoc);
-            telemetry.update();
-            robot.landRobot();
-            robot.turnRight(drivePower, 200);
-            robot.turnRight(drivePower, 1900);
-            robot.driveBackwards(drivePower, 1000);
-            robot.turnLeft(drivePower, 200);
-            robot.driveBackwards(drivePower, 500);
+        switch(goldLoc) {
+            case CENTER:
+            case UNKNOWN:
+                telemetry.addData("Current Program: Center", goldLoc);
+                telemetry.update();
+                robot.landRobot();
+                robot.encoderTurnLeft(drivePower, robot.convertDegrees(90) );
+                robot.encoderDriveForward(drivePower, robot.convertInches(27));
+//                robot.brake(3000);
+//                robot.turnRight(drivePower, 2000);
+//                robot.brake(3000);
+//                robot.driveBackwards(drivePower, 2000);
+                break;
+            case LEFT:
+                telemetry.addData("Current Program: Left", goldLoc);
+                telemetry.update();
+                robot.landRobot();
+                robot.encoderTurnLeft(drivePower, robot.convertDegrees(135) );
+                robot.encoderDriveForward(drivePower, robot.convertInches(27));
+                break;
+            case RIGHT:
+                telemetry.addData("Current Program: Right", goldLoc);
+                telemetry.update();
+                robot.landRobot();
+                robot.encoderTurnLeft(drivePower, robot.convertDegrees(45) );
+                robot.encoderDriveForward(drivePower, robot.convertInches(27));
         }
         detector.disable();
         telemetry.addData("Say", "I am done.");
