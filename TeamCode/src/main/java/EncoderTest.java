@@ -23,6 +23,6 @@ public class EncoderTest extends LinearOpMode {
 //            telemetry.addData("StackTrace", ex.getStackTrace());
 //            telemetry.update();
 //        }
-        robot.encoderTurnLeft(0.3, 5000);
+        robot.encoderTurnLeft(0.3, robot.convert(15));
     }
 }

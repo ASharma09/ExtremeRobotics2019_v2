@@ -241,6 +241,11 @@ public class Robot
 //    }
 
     // drive forward with encoder. drive by distance.
+
+    public  int convert(double inches)
+    {
+        return (int) (COUNTS_PER_INCH * inches);
+    }
     public void encoderTurnRight(double power, int ticks) {
         while(opMode.opModeIsActive() && leftFrontMotor.getCurrentPosition() >= ticks) {
             leftFrontMotor.setPower(power);
@@ -256,9 +261,9 @@ public class Robot
     public void encoderTurnLeft(double power, int ticks) {
         leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFrontMotor.setPower(-power);
+        leftFrontMotor.setPower(0);
         rightFrontMotor.setPower(power);
-        leftBackMotor.setPower(-power);
+        leftBackMotor.setPower(0);
         rightBackMotor.setPower(power);
         while(opMode.opModeIsActive() && leftFrontMotor.getCurrentPosition() <= ticks)
         {
