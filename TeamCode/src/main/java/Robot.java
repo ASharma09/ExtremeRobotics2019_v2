@@ -18,7 +18,6 @@ public class Robot
     HardwareMap hwMap;
     LinearOpMode opMode;
     double drivePower = 0.2;
-
     // Variables for Encoder driving
     static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: Andy Mark Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
@@ -260,7 +259,7 @@ public class Robot
             opMode.telemetry.update();
         }
 
-        leftFrontMotor.setPower(0);
+       leftFrontMotor.setPower(0);
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
@@ -349,14 +348,15 @@ public class Robot
         actuatorMotor.setPower(0.75);
         WaitMillis(7670);
         actuatorMotor.setPower(0);
-        encoderDriveBackward(drivePower, convertInches(2) );
-        brake(300);
-        encoderTurnRight(drivePower,convertDegrees(45) );
-        brake(300);
-        encoderDriveForward(drivePower, convertInches(2));
-        brake(300);
-        encoderTurnLeft(drivePower, convertDegrees(45));
-        brake(300);
+        driveRealign(0,0);
+//        encoderDriveBackward(drivePower, convertInches(2) );
+//        brake(300);
+//        encoderTurnRight(drivePower,convertDegrees(45) );
+//        brake(300);
+//        encoderDriveForward(drivePower, convertInches(2));
+//        brake(300);
+//        encoderTurnLeft(drivePower, convertDegrees(45));
+//        brake(300);
 
 
     }
@@ -376,6 +376,59 @@ public class Robot
         opMode.telemetry.update();
         WaitMillis(800);
     }
+    public void driveRealign(double startMotor, double endMotor)
+    {
+    startMotor = rightFrontMotor.getCurrentPosition();
+    endMotor = startMotor + 600;
+
+    //Backwards
+        while (rightFrontMotor.getCurrentPosition() <= endMotor) {
+    rightBackMotor.setPower(-drivePower);
+    rightFrontMotor.setPower(-drivePower);
+    leftBackMotor.setPower(-drivePower);
+    leftFrontMotor.setPower(-drivePower);
+}
+
+
+    //Turn right
+    startMotor = rightFrontMotor.getCurrentPosition();
+    endMotor = startMotor - 555;
+
+     while (rightFrontMotor.getCurrentPosition() >= endMotor) {
+    leftFrontMotor.setPower(drivePower);
+    rightFrontMotor.setPower(-drivePower);
+    leftBackMotor.setPower(drivePower);
+    rightBackMotor.setPower(-drivePower);
+
+    opMode.telemetry.addData("current rightFrontMotor encoder position: ", rightFrontMotor.getCurrentPosition());
+    opMode.telemetry.update();
+}
+
+    //forwards
+    startMotor = rightFrontMotor.getCurrentPosition();
+    endMotor = startMotor - 600;
+
+        while (rightFrontMotor.getCurrentPosition() >= endMotor) {
+    rightBackMotor.setPower(drivePower);
+    rightFrontMotor.setPower(drivePower);
+    leftBackMotor.setPower(drivePower);
+    leftFrontMotor.setPower(drivePower);
+}
+
+    //Turn left
+    startMotor = rightFrontMotor.getCurrentPosition();
+    endMotor = startMotor + 555;
+
+        while (rightFrontMotor.getCurrentPosition() <= endMotor) {
+    leftFrontMotor.setPower(-drivePower);
+    rightFrontMotor.setPower(drivePower);
+    leftBackMotor.setPower(-drivePower);
+    rightBackMotor.setPower(drivePower);
+
+    opMode.telemetry.addData("current rightFrontMotor encoder position: ", rightFrontMotor.getCurrentPosition());
+    opMode.telemetry.update();
+}
+}
 
     // Rotate arm
 /*    public void rotateArm(long waitTime, double power)
