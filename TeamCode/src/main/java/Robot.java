@@ -96,20 +96,20 @@ public class Robot
     // Drive forward without encoder. drive based on time.
     public void driveForward(double power, long millis)
     {
-        leftFrontMotor.setPower(-power);
-        rightFrontMotor.setPower(-power);
-        leftBackMotor.setPower(-power);
-        rightBackMotor.setPower(-power);
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(power);
+        leftBackMotor.setPower(power);
+        rightBackMotor.setPower(power);
         WaitMillis(millis);
     }
 
     // Drive backward without encoder. drive based on time.
     public void driveBackwards(double power, long millis)
     {
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-        leftBackMotor.setPower(power);
-        rightBackMotor.setPower(power);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(-power);
+        leftBackMotor.setPower(-power);
+        rightBackMotor.setPower(-power);
         WaitMillis(millis);
     }
 
@@ -377,60 +377,68 @@ public class Robot
         WaitMillis(800);
     }
     public void driveRealign(double startMotor, double endMotor)
+
     {
-    startMotor = rightFrontMotor.getCurrentPosition();
-    endMotor = startMotor + 600;
-
-    //Backwards
+        //Backwards to unhook from latch
+        startMotor = rightFrontMotor.getCurrentPosition();
+        endMotor = startMotor + 600;
         while (rightFrontMotor.getCurrentPosition() <= endMotor) {
-    rightBackMotor.setPower(-drivePower);
-    rightFrontMotor.setPower(-drivePower);
-    leftBackMotor.setPower(-drivePower);
-    leftFrontMotor.setPower(-drivePower);
-}
+            rightBackMotor.setPower(-drivePower);
+            rightFrontMotor.setPower(-drivePower);
+            leftBackMotor.setPower(-drivePower);
+            leftFrontMotor.setPower(-drivePower);
+        }
 
 
-    //Turn right
-    startMotor = rightFrontMotor.getCurrentPosition();
-    endMotor = startMotor - 555;
-
-     while (rightFrontMotor.getCurrentPosition() >= endMotor) {
-    leftFrontMotor.setPower(drivePower);
-    rightFrontMotor.setPower(-drivePower);
-    leftBackMotor.setPower(drivePower);
-    rightBackMotor.setPower(-drivePower);
-
-    opMode.telemetry.addData("current rightFrontMotor encoder position: ", rightFrontMotor.getCurrentPosition());
-    opMode.telemetry.update();
-}
-
-    //forwards
-    startMotor = rightFrontMotor.getCurrentPosition();
-    endMotor = startMotor - 600;
+        //Turn right
+        startMotor = rightFrontMotor.getCurrentPosition();
+        endMotor = startMotor - 900;
 
         while (rightFrontMotor.getCurrentPosition() >= endMotor) {
-    rightBackMotor.setPower(drivePower);
-    rightFrontMotor.setPower(drivePower);
-    leftBackMotor.setPower(drivePower);
-    leftFrontMotor.setPower(drivePower);
-}
+            leftFrontMotor.setPower(drivePower);
+            rightFrontMotor.setPower(-drivePower);
+            leftBackMotor.setPower(drivePower);
+            rightBackMotor.setPower(-drivePower);
 
-    //Turn left
-    startMotor = rightFrontMotor.getCurrentPosition();
-    endMotor = startMotor + 555;
+            opMode.telemetry.addData("current rightFrontMotor encoder position: ", rightFrontMotor.getCurrentPosition());
+            opMode.telemetry.update();
+        }
+
+        //forwards
+        startMotor = rightFrontMotor.getCurrentPosition();
+        endMotor = startMotor - 1300;
+
+        while (rightFrontMotor.getCurrentPosition() >= endMotor) {
+            rightBackMotor.setPower(drivePower);
+            rightFrontMotor.setPower(drivePower);
+            leftBackMotor.setPower(drivePower);
+            leftFrontMotor.setPower(drivePower);
+        }
+
+        //Turn left
+        startMotor = rightFrontMotor.getCurrentPosition();
+        endMotor = startMotor + 410;
 
         while (rightFrontMotor.getCurrentPosition() <= endMotor) {
-    leftFrontMotor.setPower(-drivePower);
-    rightFrontMotor.setPower(drivePower);
-    leftBackMotor.setPower(-drivePower);
-    rightBackMotor.setPower(drivePower);
+            leftFrontMotor.setPower(-drivePower);
+            rightFrontMotor.setPower(drivePower);
+            leftBackMotor.setPower(-drivePower);
+            rightBackMotor.setPower(drivePower);
 
-    opMode.telemetry.addData("current rightFrontMotor encoder position: ", rightFrontMotor.getCurrentPosition());
-    opMode.telemetry.update();
-}
-}
+            opMode.telemetry.addData("current rightFrontMotor encoder position: ", rightFrontMotor.getCurrentPosition());
+            opMode.telemetry.update();
+        }
+        //Backwards
+        startMotor = rightFrontMotor.getCurrentPosition();
+        endMotor = startMotor - 700;
+        while (rightFrontMotor.getCurrentPosition() <= endMotor) {
+            rightBackMotor.setPower(-drivePower);
+            rightFrontMotor.setPower(-drivePower);
+            leftBackMotor.setPower(-drivePower);
+            leftFrontMotor.setPower(-drivePower);
+        }
 
-    // Rotate arm
+        // Rotate arm
 /*    public void rotateArm(long waitTime, double power)
     {
         armMotor.setPower(power);
@@ -440,4 +448,5 @@ public class Robot
     }
 */
 
+    }
 }
