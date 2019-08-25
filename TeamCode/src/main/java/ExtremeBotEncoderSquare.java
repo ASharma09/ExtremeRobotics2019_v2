@@ -1,17 +1,11 @@
-//package org.firstinspires.ftc.teamcode;
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-/**
- * Created by femukund on 11/5/2017.
- */
-
-@Autonomous(name="ExtremeBotAutoONLYCrater")
-public class ExtremeBotAutoONLYCrater extends LinearOpMode
+@Autonomous(name="ExtremeBotEncoderSquare")
+public class ExtremeBotEncoderSquare extends LinearOpMode
 {
     private Robot robot = new Robot();
 
@@ -53,8 +47,11 @@ public class ExtremeBotAutoONLYCrater extends LinearOpMode
                 telemetry.addData("Current Program: Center", goldLoc);
                 telemetry.update();
                 robot.landRobot();
-                robot.encoderTurnLeft(drivePower, 1650 );
-                robot.driveBackwards(drivePower, 1850);
+                robot.encoderTurnLeft(drivePower, 1750);
+                robot.driveBackwards(drivePower, 1000);
+                robot.brake(300);
+                robot.markerDrop();
+                robot.brake(300);
 //                robot.brake(3000);
 //                robot.turnRight(drivePower, 2000);
 //                robot.brake(3000);
@@ -64,8 +61,12 @@ public class ExtremeBotAutoONLYCrater extends LinearOpMode
                 telemetry.addData("Current Program: Left", goldLoc);
                 telemetry.update();
                 robot.landRobot();
-                robot.encoderTurnLeft(drivePower, 2100);
+                robot.encoderTurnLeft(drivePower, 2175);
                 robot.driveBackwards(drivePower, 2500);
+                robot.encoderTurnRight(drivePower, robot.convertDegrees(120));
+                robot.driveBackwards(drivePower, 1000);
+                robot.brake(300);
+                robot.markerDrop();
                 robot.brake(300);
                 break;
             case RIGHT:
@@ -73,7 +74,12 @@ public class ExtremeBotAutoONLYCrater extends LinearOpMode
                 telemetry.update();
                 robot.landRobot();
                 robot.encoderTurnLeft(drivePower, 1150 );
-                robot.driveBackwards(drivePower, 1900);
+                robot.driveBackwards(drivePower, 1800);
+                robot.encoderTurnLeft(drivePower, 1200);
+                robot.encoderDriveBackward(drivePower, robot.convertInches(12));
+                robot.brake(300);
+                robot.markerDrop();
+                robot.brake(300);
                 break;
         }
         detector.disable();
