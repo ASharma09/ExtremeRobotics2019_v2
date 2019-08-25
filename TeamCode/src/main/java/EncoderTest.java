@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="EncoderTest")
 public class EncoderTest extends LinearOpMode {
     Robot robot = new Robot();
-
+///
 
     public double startMotor = 0;
     public double endMotor = 0;
