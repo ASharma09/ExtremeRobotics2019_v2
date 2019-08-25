@@ -22,7 +22,7 @@ public class ExtremeBotDrive extends LinearOpMode
 
     double leftMotorTgtPower = 0;
     double rightMotorTgtPower = 0;
-// this is a test lol xd l m a o o o o 0 o o O O
+// plz work PLZ
     // Arm
     double liftBackMotorTgtPower = .1;
     double frontArmServo = 0.0;
