@@ -35,42 +35,58 @@ public class ExtremeBotDriveMini extends LinearOpMode
     public void drive()
     {
         driveMiniBot();
+
     }
 
     // drive with joysticks
     public void driveMiniBot()
-    {
         {
-        double speedRB = 0;
-        double speedLB = 0;
-        speedRB = Range.clip(speedRB, -1, 1);
-        speedLB = Range.clip(speedLB, -1, 1);
-        if (gamepad1.dpad_left)
-        {
-            speedRB = 0.7;
-            speedLB = 0.7;
-        }
-        if (gamepad1.dpad_right)
-        {
-            speedRB = -0.7;
-            speedLB = -0.7;
-        }
-        if (gamepad1.dpad_down)
-        {
-            speedRB = 0.7;
-            speedLB = -0.7;
-        }
-        if (gamepad1.dpad_up)
-        {
-            speedRB = -0.7;
-            speedLB = 0.7;
-        }
-        robot.rightBack.setPower(speedRB);
-        robot.leftBack.setPower(speedLB);
-        telemetry.addData("speedRightBack", speedRB);
-        telemetry.addData("speedLeftBack", speedLB);
-        telemetry.update();
-        }
+            {
+                double speedRB = 0;
+                double speedLB = 0;
+                speedRB = Range.clip(speedRB, -1, 1);
+                speedLB = Range.clip(speedLB, -1, 1);
+                if (gamepad1.dpad_left)
+                {
+                    speedRB = 0.7;
+                    speedLB = 0.7;
+                }
+                if (gamepad1.dpad_right)
+                {
+                    speedRB = -0.7;
+                    speedLB = -0.7;
+                }
+                if (gamepad1.dpad_down)
+                {
+                    speedRB = 0.7;
+                    speedLB = -0.7;
+                }
+                if (gamepad1.dpad_up)
+                {
+                    speedRB = -0.7;
+                    speedLB = 0.7;
+                }
+                if (gamepad1.a)
+                {
+                    robot.curry.setPosition(0);
+                }
+                else if (gamepad1.b)
+                {
+                    robot.curry.setPosition(1);
+                }
+                else
+                {
+                    robot.curry.setPosition(0.5);
+                }
+                robot.rightBack.setPower(speedRB);
+                robot.leftBack.setPower(speedLB);
+                telemetry.addData("speedRightBack", speedRB);
+                telemetry.addData("speedLeftBack", speedLB);
+                telemetry.update();
+            }
+
+
+
 
 
         /*

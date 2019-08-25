@@ -28,6 +28,7 @@ public class RobotMini
     // Robot wheels
     DcMotor rightBack;
     DcMotor leftBack;
+    Servo curry;
 
 
     public void init(HardwareMap ProtohwMap, LinearOpMode linearOpMode)
@@ -38,6 +39,7 @@ public class RobotMini
         // Wheels
         leftBack = hwMap.dcMotor.get("leftBack");
         rightBack = hwMap.dcMotor.get("rightBack");
+        curry = hwMap.servo.get("curry");
     }
 
     public void WaitMillis (long millis)
